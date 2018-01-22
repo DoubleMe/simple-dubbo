@@ -1,0 +1,22 @@
+rootProject.name = 'simple-dubbo'
+
+include 'simple-dubbo-base'
+include 'simple-dubbo-config'
+include 'simple-dubbo-registy'
+include 'simple-dubbo-rpc'
+include 'simple-dubbo-test'
+include 'simple-dubbo-test/provider'
+include 'simple-dubbo-test/provider/service'
+include 'simple-dubbo-test/provider/impl'
+include 'simple-dubbo-test/consumer'
+
+
+findProject(":simple-dubbo-base")?.name="simple-dubbo-base"
+findProject(":simple-dubbo-config")?.name="simple-dubbo-config"
+findProject(":mini-dubbo-registy")?.name="simple-dubbo-registy"
+findProject(":simple-dubbo-rpc")?.name="simple-dubbo-rpc"
+findProject(":simple-dubbo-test")?.name="simple-dubbo-test"
+findProject(":simple-dubbo-test/provider")?.name="simple-dubbo-provider"
+findProject(":simple-dubbo-test/provider/service")?.name="simple-dubbo-provider-service"
+findProject(":simple-dubbo-test/provider/impl")?.name="simple-dubbo-provider-impl"
+findProject(":simple-dubbo-test/consumer")?.name="simple-dubbo-consumer"

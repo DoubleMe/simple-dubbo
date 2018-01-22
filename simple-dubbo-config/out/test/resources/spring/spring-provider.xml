@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:minidubbo="http://blog.csdn.net/schema/minidubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                           http://blog.csdn.net/schema/minidubbo
+                           http://blog.csdn.net/schema/minidubbo.xsd">
+
+
+    <minidubbo:application applicationName="dubbo-demo"/>
+
+    <minidubbo:protocol interfaceName="dubbo" port="21817"/>
+
+    <bean id="demoService" class="com.chenhm.test.service.impl.DemoServiceImpl"/>
+
+    <minidubbo:registry address="zookeeper://192.168.142.132:2181" group="local"/>
+    
+    <minidubbo:provider interface="com.chenhm.test.service.DemoService" ref="demoService"/>
+
+</beans>

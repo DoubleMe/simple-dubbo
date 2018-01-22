@@ -1,0 +1,137 @@
+group 'com.chemhm'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    idea {
+        module {
+            excludeDirs = []
+            [".idea", ".gradle", '.settings','classes'].each {
+                excludeDirs << file("$it")
+            }
+        }
+    }
+    repositories {
+        mavenCentral()
+    }
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.debug = "on"
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    tasks.withType(Javadoc) {
+        options.encoding = "UTF-8"
+        options.charSet = "UTF-8"
+    }
+
+    task cleanAll << {
+        println "Clean project.."
+        delete buildDir
+    }
+
+    task init << {
+        println '+---------------------------------------------------+'
+        println '|                                                   |'
+        println "| B U I L D I N G $project.name $version ...         "
+        println '|                                                   |'
+        println '+---------------------------------------------------+'
+    }
+
+
+    task initSourceFolders {
+        if ('simple-dubbo' != project.name ){
+            sourceSets*.java.srcDirs*.each { it.mkdirs() }
+            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+        }
+    }
+
+    dependencies {
+        compile("joda-time:joda-time:2.9.9")
+        compile("org.slf4j:slf4j-api:1.7.25")
+        compile("log4j:log4j:1.2.16")
+        compile("com.alibaba:fastjson:1.2.8")
+        compile("commons-lang:commons-lang:2.6")
+        compile("org.apache.commons:commons-lang3:3.4")
+        compile("commons-logging:commons-logging:1.2")
+        compile("ch.qos.logback:logback-classic:1.1.2")
+        compile("org.apache.zookeeper:zookeeper:3.4.8")
+
+        compile("org.springframework:spring-beans:4.2.7.RELEASE")
+        compile("org.springframework:spring-context-support:4.2.7.RELEASE")
+        compile('org.springframework:spring-web:4.2.7.RELEASE')
+        compile("org.springframework:spring-webmvc:4.2.7.RELEASE")
+
+        compile("org.apache.zookeeper:zookeeper:3.4.11")
+        compile("com.github.sgroschupf:zkclient:0.1")
+        compile("javax.servlet:javax.servlet-api:4.0.0-b01")
+        compile group: 'org.javassist', name: 'javassist', version: '3.22.0-GA'
+        testCompile("junit:junit:4.12")
+        testCompile("org.springframework:spring-test:4.2.7.RELEASE")
+    }
+
+}
+
+project("simple-dubbo-base") {
+    dependencies{
+    }
+}
+
+project("simple-dubbo-registy") {
+    dependencies{
+        compile(project(":simple-dubbo-base"))
+        compile(project(":simple-dubbo-rpc"))
+    }
+}
+project("simple-dubbo-config") {
+    dependencies{
+        compile(project(":simple-dubbo-base"))
+        compile(project(":simple-dubbo-registy"))
+        compile(project(":simple-dubbo-rpc"))
+
+    }
+}
+project("simple-dubbo-rpc"){
+    dependencies{
+        compile(project(":simple-dubbo-base"))
+        compile(project(":simple-dubbo-registy"))
+        compile(project(":simple-dubbo-config"))
+        compile group: 'io.netty', name: 'netty-all', version: '4.1.19.Final'
+        compile 'org.jboss.marshalling:jboss-marshalling-serial:2.0.0.Beta2'
+    }
+}
+
+project("simple-dubbo-test"){
+    dependencies{
+        compile(project(":simple-dubbo-base"))
+        compile(project(":simple-dubbo-registy"))
+        compile(project(":simple-dubbo-config"))
+        compile(project(":simple-dubbo-rpc"))
+
+    }
+}
+
+project("simple-dubbo-provider-impl"){
+    dependencies{
+        compile(project(":simple-dubbo-provider-service"))
+        compile(project(":simple-dubbo-test"))
+    }
+}
+
+project("simple-dubbo-consumer"){
+    dependencies{
+        compile(project(":simple-dubbo-provider-service"))
+        compile(project(":simple-dubbo-test"))
+    }
+}
